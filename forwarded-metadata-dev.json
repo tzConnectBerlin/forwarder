@@ -1,0 +1,10 @@
+{
+  "name": "Project foo multi asset manager",
+  "description": "Project foo multi asset manager contract",
+  "interfaces": [
+    "TZIP-012",
+    "TZIP-016",
+    "TZIP-021"
+  ],
+  "tokenCategory": "collectibles"
+}

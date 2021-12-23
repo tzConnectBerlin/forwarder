@@ -1,0 +1,11 @@
+{
+  "name": "0xC0FACE COLLECTION",
+  "description": "A collection of unique portraits collaboratively created by humans interacting with a machine algorithm at Art Basel Miami Beach 2021, designed by Mario Klingemann (Quasimondo), an artist and pioneer in the use of artificial intelligence in art. ",
+  "interfaces": [
+    "TZIP-012",
+    "TZIP-016",
+    "TZIP-021"
+  ],
+  "creator": "Mario Klingemann | Quasimondo",
+  "tokenCategory": "Art"
+}

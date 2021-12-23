@@ -1,0 +1,3 @@
+[submodule "tqtezos-smart-contracts"]
+	path = tqtezos-smart-contracts
+	url = git@github.com:tzConnectBerlin/tqtezos-smart-contracts.git

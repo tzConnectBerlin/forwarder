@@ -1,0 +1,8 @@
+{
+  "name": "Forwarder for Project Foo",
+  "description": "Contract which permits forwarding, for a while.",
+  "interfaces": [
+    "TZIP-016"
+  ],
+  "tokenCategory": "collectibles"
+}

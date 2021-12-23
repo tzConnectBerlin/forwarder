@@ -1,0 +1,188 @@
+{ parameter
+    (or (or (or (pair %approve address address)
+                (pair %create_token (nat %token_id) (map %token_info string bytes)))
+            (or (unit %disapprove)
+                (list %mint_tokens (pair (address %owner) (pair (nat %token_id) (nat %amount))))))
+        (list %transfer
+           (pair (address %from_)
+                 (list %txs (pair (address %to_) (pair (nat %token_id) (nat %amount))))))) ;
+  storage
+    (pair (pair (option %approved address) (option %contract address))
+          (pair (bool %defunct) (address %owner))) ;
+  code { PUSH nat 3 ;
+         PUSH nat 5 ;
+         PUSH nat 6 ;
+         DIG 3 ;
+         UNPAIR ;
+         IF_LEFT
+           { IF_LEFT
+               { IF_LEFT
+                   { DIG 2 ;
+                     DIG 3 ;
+                     DIG 4 ;
+                     DROP 3 ;
+                     UNPAIR ;
+                     DIG 2 ;
+                     DUP ;
+                     CDR ;
+                     CAR ;
+                     IF { PUSH nat 0 ; FAILWITH } {} ;
+                     SENDER ;
+                     SWAP ;
+                     DUP ;
+                     DUG 2 ;
+                     CDR ;
+                     CDR ;
+                     COMPARE ;
+                     NEQ ;
+                     IF { PUSH nat 1 ; FAILWITH } {} ;
+                     DUP ;
+                     CAR ;
+                     CAR ;
+                     IF_NONE
+                       { UNPAIR ;
+                         CDR ;
+                         DIG 2 ;
+                         SOME ;
+                         PAIR ;
+                         PAIR ;
+                         DUP ;
+                         CDR ;
+                         DIG 2 ;
+                         SOME ;
+                         DIG 2 ;
+                         CAR ;
+                         CAR ;
+                         PAIR ;
+                         PAIR ;
+                         NIL operation ;
+                         PAIR }
+                       { DROP 4 ; PUSH nat 4 ; FAILWITH } }
+                   { SWAP ;
+                     DUP ;
+                     CDR ;
+                     CAR ;
+                     IF { PUSH nat 0 ; FAILWITH } {} ;
+                     DUP ;
+                     CAR ;
+                     CAR ;
+                     IF_NONE
+                       { DIG 4 ; DROP ; PUSH nat 2 ; FAILWITH }
+                       { SENDER ;
+                         SWAP ;
+                         COMPARE ;
+                         EQ ;
+                         IF { DIG 4 ; DROP } { DIG 4 ; FAILWITH } } ;
+                     DUP ;
+                     CAR ;
+                     CDR ;
+                     IF_NONE { DIG 3 ; FAILWITH } { DIG 4 ; DROP } ;
+                     CONTRACT %create_token (pair (nat %token_id) (map %token_info string bytes)) ;
+                     IF_NONE
+                       { DROP 2 ; FAILWITH }
+                       { DIG 3 ;
+                         DROP ;
+                         SWAP ;
+                         NIL operation ;
+                         DIG 2 ;
+                         PUSH mutez 0 ;
+                         DIG 4 ;
+                         TRANSFER_TOKENS ;
+                         CONS ;
+                         PAIR } } }
+               { IF_LEFT
+                   { DIG 2 ;
+                     DIG 3 ;
+                     DIG 4 ;
+                     DROP 4 ;
+                     DUP ;
+                     CDR ;
+                     CAR ;
+                     IF { PUSH nat 0 ; FAILWITH } {} ;
+                     SENDER ;
+                     SWAP ;
+                     DUP ;
+                     DUG 2 ;
+                     CDR ;
+                     CDR ;
+                     COMPARE ;
+                     NEQ ;
+                     IF { PUSH nat 1 ; FAILWITH } {} ;
+                     DUP ;
+                     CDR ;
+                     CDR ;
+                     PUSH bool True ;
+                     PAIR ;
+                     SWAP ;
+                     CAR ;
+                     PAIR ;
+                     NIL operation ;
+                     PAIR }
+                   { SWAP ;
+                     DUP ;
+                     CDR ;
+                     CAR ;
+                     IF { PUSH nat 0 ; FAILWITH } {} ;
+                     DUP ;
+                     CAR ;
+                     CAR ;
+                     IF_NONE
+                       { DIG 4 ; DROP ; PUSH nat 2 ; FAILWITH }
+                       { SENDER ;
+                         SWAP ;
+                         COMPARE ;
+                         EQ ;
+                         IF { DIG 4 ; DROP } { DIG 4 ; FAILWITH } } ;
+                     DUP ;
+                     CAR ;
+                     CDR ;
+                     IF_NONE { DIG 3 ; FAILWITH } { DIG 4 ; DROP } ;
+                     CONTRACT %mint_tokens
+                       (list (pair (address %owner) (pair (nat %token_id) (nat %amount)))) ;
+                     IF_NONE
+                       { DROP 2 ; FAILWITH }
+                       { DIG 3 ;
+                         DROP ;
+                         SWAP ;
+                         NIL operation ;
+                         DIG 2 ;
+                         PUSH mutez 0 ;
+                         DIG 4 ;
+                         TRANSFER_TOKENS ;
+                         CONS ;
+                         PAIR } } } }
+           { SWAP ;
+             DUP ;
+             CDR ;
+             CAR ;
+             IF { PUSH nat 0 ; FAILWITH } {} ;
+             DUP ;
+             CAR ;
+             CAR ;
+             IF_NONE
+               { DIG 4 ; DROP ; PUSH nat 2 ; FAILWITH }
+               { SENDER ;
+                 SWAP ;
+                 COMPARE ;
+                 EQ ;
+                 IF { DIG 4 ; DROP } { DIG 4 ; FAILWITH } } ;
+             DUP ;
+             CAR ;
+             CDR ;
+             IF_NONE { DIG 3 ; FAILWITH } { DIG 4 ; DROP } ;
+             CONTRACT %transfer
+               (list (pair (address %from_)
+                           (list %txs (pair (address %to_) (pair (nat %token_id) (nat %amount)))))) ;
+             IF_NONE
+               { DROP 2 ; FAILWITH }
+               { DIG 3 ;
+                 DROP ;
+                 SWAP ;
+                 NIL operation ;
+                 DIG 2 ;
+                 PUSH mutez 0 ;
+                 DIG 4 ;
+                 TRANSFER_TOKENS ;
+                 CONS ;
+                 PAIR } } } }
+
